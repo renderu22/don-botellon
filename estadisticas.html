@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistics</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Statistics</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="content-area">
+
+    <p class="welcome-label">Analytics</p>
+    <h2 class="welcome-title">Insights</h2>
+
+    <!-- Contenedor de estadísticas -->
+    <div id="statsContainer"></div>
+
+    <!-- Back -->
+    <div class="logout-wrapper">
+      <button type="button" class="logout-btn" onclick="location.href='index.html'">
+        ← Back to Dashboard
+      </button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script src="dashboard.js"></script>
+
+  <script>
+    function cargarEstadisticas() {
+      const clientes = obtenerClientes();
+      const totalClientes = clientes.length;
+
+      const inactivos30 = obtenerClientesInactivos(30).length;
+      const activos = totalClientes - inactivos30;
+
+      let totalRecargas = 0;
+      let totalRegalados = 0;
+      let ultimaRecargaGlobal = null;
+      let nuevosEsteMes = 0;
+
+      const hoy = new Date();
+      const mesActual = hoy.getMonth();
+      const añoActual = hoy.getFullYear();
+
+      clientes.forEach(cliente => {
+        totalRecargas += cliente.recargas.length;
+        totalRegalados += cliente.regalados;
+
+        // Última recarga global
+        if (cliente.recargas.length > 0) {
+          const ultima = new Date(cliente.recargas[cliente.recargas.length - 1].fecha);
+          if (!ultimaRecargaGlobal || ultima > ultimaRecargaGlobal) {
+            ultimaRecargaGlobal = ultima;
+          }
+        }
+
+        // Nuevos este mes
+        const fechaRegistro = new Date(cliente.fechaRegistro);
+        if (fechaRegistro.getMonth() === mesActual && fechaRegistro.getFullYear() === añoActual) {
+          nuevosEsteMes++;
+        }
+      });
+
+      const promedio = totalClientes > 0 ? (totalRecargas / totalClientes).toFixed(1) : 0;
+
+      const statsHTML = `
+        <div class="card-ios">
+          <h3 class="card-title">Total Clients</h3>
+          <p class="card-subtitle">${totalClientes}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Active Clients</h3>
+          <p class="card-subtitle">${activos}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Inactive (30 days)</h3>
+          <p class="card-subtitle">${inactivos30}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Total Refills</h3>
+          <p class="card-subtitle">${totalRecargas}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Free Bottles Given</h3>
+          <p class="card-subtitle">${totalRegalados}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Avg Refills per Client</h3>
+          <p class="card-subtitle">${promedio}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">Last Refill</h3>
+          <p class="card-subtitle">${ultimaRecargaGlobal ? ultimaRecargaGlobal.toLocaleDateString() : "No data"}</p>
+        </div>
+
+        <div class="card-ios">
+          <h3 class="card-title">New Clients This Month</h3>
+          <p class="card-subtitle">${nuevosEsteMes}</p>
+        </div>
+      `;
+
+      document.getElementById("statsContainer").innerHTML = statsHTML;
+    }
+
+    cargarEstadisticas();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price Calculator</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1 class="header-title">Price Calculator</h1>
+    </header>
+
+    <button class="back-floating" onclick="location.href='index.html'">
+      <svg viewBox="0 0 24 24" class="back-icon">
+        <path d="M15 6l-6 6 6 6" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+
+  <div class="content-area">
+
+    <p class="welcome-label">Quick tool</p>
+    <h2 class="welcome-title">Bottle Pricing</h2>
+
+    <div class="form-group">
+      <label>Dólar BCV del día</label>
+      <input type="number" id="dolar" class="calculator-input" min="0" step="0.01" value="40">
+    </div>
+
+
+    <div class="form-group">
+    <label>20 Liters (1.5$)</label>
+    <div class="counter">
+        <button class="counter-btn" onclick="cambiarCantidad('litros20', -1)">−</button>
+        <input type="number" id="litros20" class="calculator-input" min="0" value="0">
+        <button class="counter-btn" onclick="cambiarCantidad('litros20', 1)">+</button>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label>12 Liters (1$)</label>
+    <div class="counter">
+        <button class="counter-btn" onclick="cambiarCantidad('litros12', -1)">−</button>
+        <input type="number" id="litros12" class="calculator-input" min="0" value="0">
+        <button class="counter-btn" onclick="cambiarCantidad('litros12', 1)">+</button>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label>5 Liters (0.5$)</label>
+    <div class="counter">
+        <button class="counter-btn" onclick="cambiarCantidad('litros5', -1)">−</button>
+        <input type="number" id="litros5" class="calculator-input" min="0" value="0">
+        <button class="counter-btn" onclick="cambiarCantidad('litros5', 1)">+</button>
+    </div>
+    </div>
+
+    <div id="resultado" class="result-box" style="display:none;">
+      <h3>Total:</h3>
+      <p id="total"></p>
+      <h4>Breakdown:</h4>
+      <p id="detalle"></p>
+    </div>
+
+    <button class="dashboard-card" onclick="preguntarCliente()">
+      <div class="card-text">
+        <span class="card-title">Asignar a cliente</span>
+        <span class="card-subtitle">Seleccionar cliente</span>
+      </div>
+    </button>
+    
+  </div>
+  
+  
+  <script src="calculadora.js"></script>
+  
+</body>
+</html>
+

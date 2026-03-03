@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Clientes</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Clientes</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="content-area">
+
+    <!-- Search -->
+    <div class="buscador-wrapper">
+      <i class="fas fa-search buscador-icono"></i>
+      <input type="number" id="buscarNumero" class="buscador-input" placeholder="Buscar número..." />
+    </div>
+
+    <button class="btn-buscar" onclick="buscarCliente()">Buscar</button>
+
+
+
+    <h2 class="welcome-title" style="margin-top: 20px;">Lista</h2>
+
+    <!-- Lista tipo Ajustes -->
+    <div id="listaClientes" class="lista-ios"></div>
+
+    <!-- Back -->
+    <div class="logout-wrapper">
+      <button type="button" class="logout-btn" onclick="location.href='index.html'">
+        ← Volver al Dashboard
+      </button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script src="dashboard.js"></script>
+
+  <script>
+    mostrarListaClientes();
+  </script>
+
+</body>
+</html>

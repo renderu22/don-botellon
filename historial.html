@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <style>
+    /* Timeline estilo iOS */
+    .btn-ios {
+    background: #f2f2f7;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    margin-right: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    }
+
+    .btn-ios:active {
+    background: #dcdcdc;
+    }
+
+    .input-ios {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    }
+
+    .timeline {
+      margin-top: 20px;
+      padding-left: 20px;
+      border-left: 2px solid #e5e5e5;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 12px 0 12px 20px;
+      cursor: pointer;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -11px;
+      top: 18px;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2px solid #007AFF;
+      border-radius: 50%;
+    }
+
+    .timeline-date {
+      font-size: 13px;
+      color: #8e8e93;
+      margin-bottom: 4px;
+    }
+
+    .timeline-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .timeline-sub {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+  <body>
+
+    <!-- Header -->
+    <header class="header">
+      <h1 class="header-title">History</h1>
+    </header>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <p class="welcome-label">Recent Activity</p>
+      <h2 class="welcome-title">Timeline</h2>
+      
+      <div style="margin-bottom: 15px;">
+          <button onclick="filtrarHistorial('hoy')" class="btn-ios">Hoy</button>
+          <button onclick="filtrarHistorial('ayer')" class="btn-ios">Ayer</button>
+          <button onclick="filtrarHistorial('7')" class="btn-ios">7 días</button>
+          <button onclick="filtrarHistorial('30')" class="btn-ios">30 días</button>
+
+          <input type="date" id="fechaBusqueda" onchange="filtrarPorFecha()" class="input-ios" />
+      </div>
+
+
+      <div id="timelineContainer" class="timeline"></div>
+
+      <!-- Back -->
+      <div class="logout-wrapper">
+        <button type="button" class="logout-btn" onclick="location.href='index.html'">
+          ← Back to Dashboard
+        </button>
+      </div>
+
+    </div>
+
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+
+      <script>
+        function obtenerEventos() {
+            return JSON.parse(localStorage.getItem("eventos")) || [];
+        }
+
+        function filtrarHistorial(tipo) {
+            const eventos = obtenerEventos();
+            const hoy = new Date();
+            let filtrados = [];
+
+            eventos.forEach(ev => {
+                const fechaEv = new Date(ev.fecha);
+                let incluir = false;
+
+                if (tipo === "hoy") {
+                    incluir = fechaEv.toDateString() === hoy.toDateString();
+                }
+
+                if (tipo === "ayer") {
+                    const ayer = new Date();
+                    ayer.setDate(hoy.getDate() - 1);
+                    incluir = fechaEv.toDateString() === ayer.toDateString();
+                }
+
+                if (tipo === "7") {
+                    const hace7 = new Date();
+                    hace7.setDate(hoy.getDate() - 7);
+                    incluir = fechaEv >= hace7;
+                }
+
+                if (tipo === "30") {
+                    const hace30 = new Date();
+                    hace30.setDate(hoy.getDate() - 30);
+                    incluir = fechaEv >= hace30;
+                }
+
+                if (incluir) filtrados.push(ev);
+            });
+
+            mostrarEventos(filtrados);
+        }
+
+        function filtrarPorFecha() {
+            const fechaSeleccionada = document.getElementById("fechaBusqueda").value;
+            if (!fechaSeleccionada) return;
+
+            const eventos = obtenerEventos();
+            let filtrados = eventos.filter(ev => ev.fecha.split("T")[0] === fechaSeleccionada);
+
+            mostrarEventos(filtrados);
+        }
+
+        function mostrarEventos(eventos) {
+            const contenedor = document.getElementById("timelineContainer");
+
+            if (eventos.length === 0) {
+                contenedor.innerHTML = `<p style="color:#999;">No activity found.</p>`;
+                return;
+            }
+
+            eventos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            const clientes = obtenerClientes();
+            let html = "";
+
+            eventos.forEach(ev => {
+                const cliente = clientes.find(c => c.id == ev.idCliente);
+                if (!cliente) return;
+
+                const fechaObj = new Date(ev.fecha);
+                const fecha = fechaObj.toLocaleDateString();
+                const hora = fechaObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+                let titulo = "";
+                if (ev.tipo === "recarga") titulo = "Refill added";
+                if (ev.tipo === "regalado") titulo = "Free bottle awarded";
+                if (ev.tipo === "registro") titulo = "Client registered";
+                if (ev.tipo === "eliminado") titulo = "Client deleted";
+
+                html += `
+                <div class="timeline-item" onclick="abrirCliente(${cliente.id})">
+                    <div class="timeline-date"><strong>${fecha}</strong> — ${hora}</div>
+                    <div class="timeline-title">${titulo}</div>
+                    <div class="timeline-sub">${cliente.nombre} (Nº ${cliente.numero})</div>
+                </div>
+                `;
+            });
+
+            contenedor.innerHTML = html;
+        }
+
+        function abrirCliente(id) {
+            localStorage.setItem("clienteSeleccionadoID", id);
+            window.location.href = "infocliente.html";
+        }
+
+        // Cargar HOY por defecto
+        filtrarHistorial("hoy");
+      </script>
+
+
+
+  </body>
+</html>

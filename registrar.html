@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrar Cliente</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Registrar Cliente</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="content-area">
+
+    <!-- Title -->
+    <p class="welcome-label">Nuevo cliente</p>
+    <h2 class="welcome-title">Agregar información</h2>
+
+    <!-- Form -->
+    <form class="form-ios" onsubmit="event.preventDefault(); registrarCliente();">
+
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input type="text" id="nombre" class="form-input" placeholder="Ingrese el nombre" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Número</label>
+        <input type="number" id="numero" class="form-input" placeholder="Ingrese el número" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Teléfono</label>
+        <input type="text" id="telefono" class="form-input" placeholder="Ingrese el teléfono" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dirección</label>
+        <input type="text" id="direccion" class="form-input" placeholder="Ingrese la dirección" />
+      </div>
+
+      <button type="submit" class="btn-primary">Guardar cliente</button>
+
+    </form>
+
+    <!-- Back -->
+    <div class="logout-wrapper">
+      <button type="button" class="logout-btn" onclick="location.href='index.html'">
+        ← Volver al Dashboard
+      </button>
+    </div>
+
+  </div>
+
+  <script src="dashboard.js"></script>
+
+  <script src="app.js"></script>
+  <script>
+    mostrarNumerosDisponiblesRegistrar();
+    sugerirNumeroDisponible();
+  </script>
+
+</body>
+</html>
+
+
