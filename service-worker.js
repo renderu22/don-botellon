@@ -3,7 +3,7 @@ const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./clientes.html",
-  "./infocliente.html",
+  "./infoCliente.html",
   "./historial.html",
   "./estadisticas.html",
   "./inactivos.html",
