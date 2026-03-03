@@ -1,8 +1,9 @@
 const CACHE_NAME = "don-botellon-v1";
 const FILES_TO_CACHE = [
+  "./",
   "./index.html",
   "./clientes.html",
-  "./infoCliente.html",
+  "./infocliente.html",
   "./historial.html",
   "./estadisticas.html",
   "./inactivos.html",
